@@ -1,9 +1,7 @@
 // YOUR CODE HERE:
-
-var apiURL = "https://api.parse.com/1/classes/chatterbox";
 var post = function(message){
   $.ajax({
-    url: apiURL,
+    url: app.server,
     type: 'POST',
     data: JSON.stringify(message),
     contentType: 'application/json',
@@ -21,7 +19,7 @@ var messages;
 
 var get = function(){
   $.ajax({
-    url: apiURL,
+    url: app.server,
     type: 'GET',
     contentType: 'application/json',
     success: function (data) {
@@ -51,7 +49,19 @@ var displayMessages = function(messages){
     console.log(message.text);
   }
 };
+
 $(document).ready(function(){
-  get();
+  app.init();
 });
 
+var app = {
+  init: function(){},
+  send: function(){},
+  server: "https://api.parse.com/1/classes/chatterbox",
+  fetch: get,
+  clearMessages: function(){$('.message').remove();},
+  addMessage: function(){},
+  addRoom: function(){},
+  addFriend: function(){},
+  handleSubmit: function(){}
+};
