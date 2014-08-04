@@ -3,7 +3,7 @@ var post = function(message){
   $.ajax({
     url: app.server,
     type: 'POST',
-    data: JSON.stringify(message),
+    data: message,
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
@@ -21,6 +21,7 @@ var get = function(){
   $.ajax({
     url: app.server,
     type: 'GET',
+    data: {'order': '-createdAt'},
     contentType: 'application/json',
     success: function (data) {
       console.log("GET success");
@@ -35,19 +36,35 @@ var get = function(){
 };
 
 var displayMessages = function(messages){
+  console.log(messages[0]);
   // .username
   // .text
   // .roomname
   // .createdAt
   // .updatedAd
   // .objectID
-  var $header = $('h1');
   for(var i = 0; i < messages.length; i++){
-    var message = messages[i];
-    var $message = $('<p></p>').insertAfter($header);
-    $message.addClass('message').text(message.text);
-    console.log(message.text);
+    app.addMessage(messages[i]);
   }
+};
+var addMessage = function(message){
+  var $chats = $('#chats');
+  var $message = $('<p></p>').appendTo($chats);
+  $message.addClass('message').text(message.text);
+  $message.prepend('<span class="username">');
+  var $username = $message.find('.username');
+  $username.text(message.username);
+  $message.prepend('<span class="roomname">');
+  var $roomname = $message.find('.roomname');
+  $roomname.text(message.roomname);
+  $message.append('<span class="createdAt">');
+  var $createdAt = $message.find('.createdAt');
+  $createdAt.text(message.createdAt);
+}
+
+var refreshMessages = function(){
+  app.clearMessages();
+  app.fetch();
 };
 
 $(document).ready(function(){
@@ -55,12 +72,12 @@ $(document).ready(function(){
 });
 
 var app = {
-  init: function(){},
-  send: function(){},
+  init: function(){ refreshMessages(); },
+  send: post,
   server: "https://api.parse.com/1/classes/chatterbox",
   fetch: get,
-  clearMessages: function(){$('.message').remove();},
-  addMessage: function(){},
+  clearMessages: function(){$('#chats').children().remove();},
+  addMessage: addMessage,
   addRoom: function(){},
   addFriend: function(){},
   handleSubmit: function(){}

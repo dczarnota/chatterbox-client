@@ -82,3 +82,33 @@ form input[type=text] {
 .spinner img {
     padding: 10px;
 }
+.message{
+    border: 1px dashed red;
+    padding: 1px;
+    margin: 1px;
+    clear: both;
+}
+.message:nth-child(2n){
+    background-color: rgba(0,0,0,.1);
+}
+.roomname{
+    font-size: .8em;
+    border: 1px dashed orange;
+    padding: 1px;
+    margin: 1px;
+}
+.username{
+    color: rgba(0,0,0,.5);
+    font-size: .8em;
+    border: 1px dotted green;
+    margin: 1px;
+    padding: 1px;
+    margin-right: 1em;
+}
+.createdAt{
+    font-size: .5em;
+    border: 1px dashed blue;
+    padding: 1px;
+    margin: 1px;
+    float: right;
+}
