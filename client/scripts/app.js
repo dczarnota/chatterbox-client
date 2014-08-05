@@ -1,8 +1,8 @@
 // YOUR CODE HERE:
 var refreshMessagesInterval;
-var messages;
 var objectIds = [];
 var roomnames = {};
+var friends = {};
 $(document).ready(function(){
   app.init();
 });
@@ -33,12 +33,10 @@ var get = function(){
     contentType: 'application/json',
     success: function (data) {
       console.log("GET success");
-      messages = data.results;
-      displayMessages(messages);
+      displayMessages(data.results);
     },
     error: function (data) {
-      console.log("GET error");
-      messages = ['GET request failed'];
+      console.log("GET error",data);
     }
   });
 };
@@ -119,6 +117,18 @@ var pause = function(){
   clearInterval(refreshMessagesInterval);
 }
 
+var addFriend = function(username){
+  friends[username] = username;
+  var messages = $('.message');
+  for( var i = 0; i < messages.length; i++ ){
+    var $message = $(messages[i]);
+    if( $message.find('.username').text() === username ){
+      $message.addClass('friend');
+    }
+  }
+  console.log('Added',username,'as friend.');
+}
+
 var app = {
   init: init,
   send: post,
@@ -127,6 +137,6 @@ var app = {
   clearMessages: function(){$('#chats').children().remove();},
   addMessage: addMessage,
   addRoom: addRoom,
-  addFriend: function(username){console.log('Added',username,'as friend.');},
+  addFriend: addFriend,
   handleSubmit: handleSubmit
 };
