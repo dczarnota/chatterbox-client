@@ -57,7 +57,7 @@ var displayMessages = function(messages){
       objectIds.push( message.objectId );
       if( !roomnames[ message.roomname ] && typeof message.roomname !== 'undefined' && message.roomname !== "" ){
         roomnames[ message.roomname ] = message.roomname;
-        $('#roomSelect').append("<option value='"+message.roomname+"'>"+message.roomname+"</option>)");
+        $('#roomSelect').append("<option value='"+message.roomname+"'>"+message.roomname+"</option>");
       }
       app.addMessage(message);
     }
@@ -69,6 +69,8 @@ var addMessage = function(message){
   var $message = $('<p></p>').prependTo($chats);
   $message.addClass('message').text(message.text);
   $message.attr('objectId', message.objectId);
+
+  //Select username
   $message.prepend('<span class="username">');
   var $username = $message.find('.username');
   $username.text(message.username);
@@ -78,12 +80,16 @@ var addMessage = function(message){
   if( friends[ message.username ] ){
     $message.addClass('friend');
   }
+
+  //Select chat roomname
   $message.prepend('<span class="roomname">');
   var $roomname = $message.find('.roomname');
   $roomname.text(message.roomname);
-  if( currentRoom === message.roomname ] ){
+  if( currentRoom === message.roomname || currentRoom === "(All Messages)"){
     $message.addClass('currentRoom');
   }
+
+  //Add time stamp
   $message.append('<span class="createdAt">');
   var $createdAt = $message.find('.createdAt');
   $createdAt.text(message.createdAt);
@@ -104,18 +110,26 @@ var init = function(){
     $('.submit').trigger("submit");
   });
   $('.submit').on('submit', function(){
-    // debugger;
     console.log('Submit triggered.');
     app.handleSubmit();
   });
 
-  currentRoom = $("#roomSelect").val();
-
+  //Select room
   $("#roomSelect").on('change',function(something){
+    console.log("Room changed");
     currentRoom = $("#roomSelect").val();
+    $('.message').each(function(i, element){
+      var elementRoom = $(element).find('.roomname').text();
+      if(elementRoom === currentRoom || currentRoom === "(All Messages)"){
+        $(element).addClass('currentRoom');
+      } else {
+        $(element).removeClass('currentRoom');
+      }
+    });
   });
+  $("#roomSelect").trigger("change");
+// debugger;
 
-  for(message)
 };
 
 var handleSubmit = function(){
