@@ -3,6 +3,7 @@ var refreshMessagesInterval;
 var objectIds = [];
 var roomnames = {};
 var friends = {};
+var currentRoom;
 $(document).ready(function(){
   app.init();
 });
@@ -80,6 +81,9 @@ var addMessage = function(message){
   $message.prepend('<span class="roomname">');
   var $roomname = $message.find('.roomname');
   $roomname.text(message.roomname);
+  if( currentRoom === message.roomname ] ){
+    $message.addClass('currentRoom');
+  }
   $message.append('<span class="createdAt">');
   var $createdAt = $message.find('.createdAt');
   $createdAt.text(message.createdAt);
@@ -104,6 +108,14 @@ var init = function(){
     console.log('Submit triggered.');
     app.handleSubmit();
   });
+
+  currentRoom = $("#roomSelect").val();
+
+  $("#roomSelect").on('change',function(something){
+    currentRoom = $("#roomSelect").val();
+  });
+
+  for(message)
 };
 
 var handleSubmit = function(){
