@@ -16,6 +16,7 @@ body {
 }
 
 #main h1 {
+    text-align: center;
     margin-top: 0;
     font-size: 35px;
     margin-bottom: 5px;
@@ -111,4 +112,20 @@ form input[type=text] {
     padding: 1px;
     margin: 1px;
     float: right;
+}
+
+form{
+    display: inline;
+}
+form input[type=text]{
+    width: 325px;
+}
+input#message{
+    margin-left: -20px;
+}
+
+#roomSelect{
+    float: right;
+    margin-top: 8px;
+    width: 85px;
 }

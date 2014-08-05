@@ -15,7 +15,7 @@ describe('chatterbox', function() {
 
     before(function() {
       ajaxSpy = sinon.stub($, 'ajax');
-      app.init();
+      // app.init();
     });
 
     beforeEach(function() {
@@ -104,7 +104,7 @@ describe('chatterbox', function() {
           roomname: 'lobby'
         });
 
-        app.init();
+        // app.init();
 
         $('#main').find('.username').trigger('click');
         expect(app.addFriend.called).to.be.true;
@@ -117,7 +117,7 @@ describe('chatterbox', function() {
 
         $('#message').val('Why so many Mel Brooks quotes?');
 
-        app.init();
+        // app.init();
 
         $('#send .submit').trigger('submit');
         expect(app.handleSubmit.calledOnce).to.be.true;
