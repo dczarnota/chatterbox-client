@@ -3,7 +3,7 @@ var post = function(message){
   $.ajax({
     url: app.server,
     type: 'POST',
-    data: message,
+    data: JSON.stringify(message),
     contentType: 'application/json',
     success: function (data) {
       console.log('chatterbox: Message sent');
@@ -43,17 +43,22 @@ var displayMessages = function(messages){
   // .createdAt
   // .updatedAd
   // .objectID
-  for(var i = 0; i < messages.length; i++){
+  for(var i = messages.length-1; i >=0 ; i--){
     app.addMessage(messages[i]);
   }
 };
 var addMessage = function(message){
   var $chats = $('#chats');
-  var $message = $('<p></p>').appendTo($chats);
+  var $message = $('<p></p>').prependTo($chats);
   $message.addClass('message').text(message.text);
   $message.prepend('<span class="username">');
   var $username = $message.find('.username');
   $username.text(message.username);
+  // debugger;
+  $username.on('click', function(){
+    console.log('clicked username.');
+    app.addFriend();
+  });
   $message.prepend('<span class="roomname">');
   var $roomname = $message.find('.roomname');
   $roomname.text(message.roomname);
@@ -67,6 +72,10 @@ var refreshMessages = function(){
   app.fetch();
 };
 
+var addRoom = function(room){
+  $('#roomSelect').append('<div class="room"></div>');
+};
+
 $(document).ready(function(){
   app.init();
 });
@@ -78,7 +87,7 @@ var app = {
   fetch: get,
   clearMessages: function(){$('#chats').children().remove();},
   addMessage: addMessage,
-  addRoom: function(){},
-  addFriend: function(){},
+  addRoom: addRoom,
+  addFriend: function(){console.log("Called addFriend!");},
   handleSubmit: function(){}
 };
