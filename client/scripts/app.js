@@ -74,6 +74,9 @@ var addMessage = function(message){
   $username.on('click', function(){
     app.addFriend(message.username);
   });
+  if( friends[ message.username ] ){
+    $message.addClass('friend');
+  }
   $message.prepend('<span class="roomname">');
   var $roomname = $message.find('.roomname');
   $roomname.text(message.roomname);
