@@ -57,7 +57,7 @@ var displayMessages = function(messages){
       objectIds.push( message.objectId );
       if( !roomnames[ message.roomname ] && typeof message.roomname !== 'undefined' && message.roomname !== "" ){
         roomnames[ message.roomname ] = message.roomname;
-        $('#roomSelect').append("<option value='"+message.roomname+"'>"+message.roomname+"</option>");
+        app.addRoom(message.roomname);
       }
       app.addMessage(message);
     }
@@ -96,7 +96,16 @@ var addMessage = function(message){
 };
 
 var addRoom = function(room){
-  $('#roomSelect').append('<div class="room"></div>');
+  var roomDoesntExist = true;
+  $('#roomSelect>option').each(function(index, checkRoom){
+    if(room === $(checkRoom).val()){
+      console.log(room === $(checkRoom).val(),room, '===', $(checkRoom).val())
+      roomDoesntExist = false;
+    }
+  });
+  if( roomDoesntExist ){
+    $('#roomSelect').append("<option value='"+room+"'>"+room+"</option>");
+  }
 };
 
 var init = function(){
@@ -116,8 +125,8 @@ var init = function(){
 
   //Select room
   $("#roomSelect").on('change',function(something){
-    console.log("Room changed");
     currentRoom = $("#roomSelect").val();
+    console.log("Changed room to: " + currentRoom);
     $('.message').each(function(i, element){
       var elementRoom = $(element).find('.roomname').text();
       if(elementRoom === currentRoom || currentRoom === "(All Messages)"){
@@ -128,18 +137,27 @@ var init = function(){
     });
   });
   $("#roomSelect").trigger("change");
-// debugger;
-
 };
 
 var handleSubmit = function(){
   console.log("Submit handled.");
   var text = $('input').val();
-  var username = window.location.search.split('=')[1];
-  var roomname = $('#roomSelect').val() || "was null";
-  var message = {username: username, text: text, roomname: roomname}
-  console.log(message);
-  app.send(message);
+
+  //Adding new room via form submit
+  if($('#roomSelect').val() === "(Add New Room)"){
+    app.addRoom(text);
+    $('#roomSelect').val(text);
+    $('input').val('');
+    currentRoom = text;
+  } else {
+    //Else submit new messsage
+    var username = window.location.search.split('=')[1];
+    var roomname = $('#roomSelect').val() || "was null";
+    var message = {username: username, text: text, roomname: roomname}
+    console.log(message);
+    app.send(message);
+  }
+
 };
 
 var pause = function(){

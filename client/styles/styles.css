@@ -126,9 +126,9 @@ input#message{
 }
 
 #roomSelect{
-    float: right;
     margin-top: 8px;
-    width: 85px;
+    width: 121px;
+    margin-left: -37px;
 }
 
 .friend{
