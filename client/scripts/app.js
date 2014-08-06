@@ -4,6 +4,7 @@ var objectIds = [];
 var roomnames = {};
 var friends = {};
 var currentRoom;
+
 $(document).ready(function(){
   app.init();
 });
@@ -51,18 +52,48 @@ var displayMessages = function(messages){
   // .objectID
   // 1. when fetching messages, if id not in array, addMessage
   // 2. append all new object ids to array
+
   for( var i = messages.length-1; i >=0; i-- ){
     var message = messages[i];
     if( objectIds.indexOf( message.objectId ) === -1 ){
       objectIds.push( message.objectId );
+
       if( !roomnames[ message.roomname ] && typeof message.roomname !== 'undefined' && message.roomname !== "" ){
         roomnames[ message.roomname ] = message.roomname;
         app.addRoom(message.roomname);
       }
       app.addMessage(message);
+      if(emojiBot.runOnce){
+        emojiBot.emojiRespond(message);
+      }
     }
   }
+  emojiBot.runOnce = true;
 };
+
+//emojiBot response for new messages
+var emojiBot = {
+  emojiRespond: function(message){
+    var runOnce = false;
+    var randomReply = [':)', ':D', ':X', 'D:', ':('];
+    var botMessage = randomReply[ Math.floor((Math.random() * randomReply.length)) ];
+    var response = {username: 'emojiBot', text: botMessage, roomname: message.roomname};
+    var wasMentioned = emojiBot.mentionedIn(message);
+    if( wasMentioned || Math.random() > .66 ){
+      if( wasMentioned ){ response.text = "@"+message.username+" "+response.text; }
+      setTimeout( function(){ app.send(response); }, 1000);
+    }
+  },
+  runOnce: false,
+  mentionedIn: function(message){
+    var theText = message.text.toLowerCase();
+    if( theText.match('bot') || theText.match('emoji') ){
+      return true;
+    }
+    return false;
+  }
+};
+
 
 var addMessage = function(message){
   var $chats = $('#chats');
@@ -162,7 +193,7 @@ var handleSubmit = function(){
 
 var pause = function(){
   clearInterval(refreshMessagesInterval);
-}
+};
 
 var addFriend = function(username){
   friends[username] = username;
@@ -174,7 +205,7 @@ var addFriend = function(username){
     }
   }
   console.log('Added',username,'as friend.');
-}
+};
 
 var app = {
   init: init,
@@ -185,5 +216,6 @@ var app = {
   addMessage: addMessage,
   addRoom: addRoom,
   addFriend: addFriend,
-  handleSubmit: handleSubmit
+  handleSubmit: handleSubmit,
+  emojiBot: emojiBot
 };
